@@ -1,6 +1,8 @@
 const path = require('path')
 const EslintWebpackPlugin = require('eslint-webpack-plugin')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
+// react jsx代码热更新插件
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 // 返回处理样式loader的函数
 const getStyleLoaders = (pre) => {
@@ -64,7 +66,10 @@ module.exports = {
                 loader: 'babel-loader', // 其他配置用了babel-preset-react-app，不用自己操心
                 options: {
                     cacheDirectory: true,
-                    cacheCompression: false
+                    cacheCompression: false,
+                    plugins: [
+                        "react-refresh/babel", // 激活js的HMR功能
+                    ]
                 }
             }
         ]
@@ -74,14 +79,16 @@ module.exports = {
     plugins: [
         new EslintWebpackPlugin({
             context: path.resolve(__dirname, '../src'),
-            excludes: 'node_modules',
+            exclude: 'node_modules',
             cache: true,
             cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache')
         }),
         // html
         new HTMLWebpackPlugin({
             template: path.resolve(__dirname, '../src/index.html')
-        })
+        }),
+        // HMR
+        new ReactRefreshWebpackPlugin()
     ],
     mode: 'development',
     devtool: 'cheap-module-source-map',
@@ -93,10 +100,21 @@ module.exports = {
             name: entrypoint => `runtime-${entrypoint.name}.js`
         }
     },
+    // webpack解析模块加载选项
+    resolve: {
+        // 自动补全文件扩展名（路径后缀自动补全，如import from main，不用写main.js）
+        extensions: ['.jsx', '.js', '.json']
+    },
     devServer: {
         host: 'localhost',
-        port: 3000,
+        port: 3001,
         open: true,
-        hot: true // 热模块替换
+        hot: true, // 热模块替换，需要先开启这个 ReactRefreshWebpackPlugin 才有用
+        // 解决react-router刷新404问题（有后缀路径的时候）
+        // 因为打包生成文件只有一个index.html，然后下面js、css，并没有资源叫home/about
+        // 开启这一项，就可以让刷新的时候，无论网站路径如何，都返回index.html
+        // 一旦404，重定向到index.html
+        // 后面由index.html中加载的js代码自己匹配路由处理
+        historyApiFallback: true,
     }
 }

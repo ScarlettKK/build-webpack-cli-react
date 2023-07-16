@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run dev",
+    "desp": "babel-preset-react-app需要配置NODE_ENV环境变量, 这里用cross-env插件解决",
+    "dev": "cross-env NODE_ENV=development webpack serve --config ./config/webpack.dev.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,29 @@
     "last 2 version",
     "> 1%",
     "not dead"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "babel-loader": "^9.1.3",
+    "babel-preset-react-app": "^10.0.1",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.8.1",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-webpack-plugin": "^4.0.1",
+    "html-webpack-plugin": "^5.5.3",
+    "less-loader": "^11.1.3",
+    "postcss-loader": "^7.3.3",
+    "postcss-preset-env": "^9.0.0",
+    "react-refresh": "^0.14.0",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.1"
+  }
 }
