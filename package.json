@@ -6,8 +6,8 @@
   "scripts": {
     "start": "npm run dev",
     "desp": "babel-preset-react-app需要配置NODE_ENV环境变量, 这里用cross-env插件解决",
-    "dev": "cross-env NODE_ENV=development webpack serve --config ./config/webpack.dev.js",
-    "build": "cross-env NODE_ENV=production webpack --config ./config/webpack.pro.js"
+    "dev": "cross-env NODE_ENV=development webpack serve --config ./config/webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --config ./config/webpack.config.js"
   },
   "repository": {
     "type": "git",
