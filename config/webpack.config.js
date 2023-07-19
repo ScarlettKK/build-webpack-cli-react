@@ -16,7 +16,6 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 // 获取process env定义的环境变量
 const isProduction = process.env.NODE_ENV === 'production'
 
-
 // 返回处理样式loader的函数
 const getStyleLoaders = (pre) => {
     return [
@@ -33,7 +32,7 @@ const getStyleLoaders = (pre) => {
                 }
             }
         },
-        pre
+        pre 
     ].filter(Boolean)
 }
 
@@ -133,7 +132,34 @@ module.exports = {
     devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
     optimization: {
         splitChunks: { // 代码分割，主要是是node_modules以及动态导入的代码
-            chunks: 'all'
+            chunks: 'all',
+            // 因为打包会把node_modules打包成一整个包，随着插件的增多这个文件会越来越大
+            // 所以这里把最大的几个插件分开打，从而并行加载速度更好
+            // 如果项目中没有，请删除
+            cacheGroups: {
+                // react react-dom react-router-dom 成一个包
+                react: {
+                    // 文件名匹配
+                    test: /[\\/]node_modules[\\/]react(.*)?[\\/]/,
+                    name: 'chunk-react',
+                    // 权重
+                    priority: 40,
+                },
+                // antd 单独一个包
+                antd: {
+                    test: /[\\/]node_modules[\\/]antd(.*)?[\\/]/,
+                    name: 'chunk-antd',
+                    // 权重
+                    priority: 30,
+                },
+                 // 剩下部分的 node_modules 单独一个包
+                libs: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'chunk-libs',
+                    // 权重
+                    priority: 20,
+                },
+            }
         },
         runtimeChunk: { // runtime 配置文件名称
             name: entrypoint => `runtime-${entrypoint.name}.js`
@@ -189,5 +215,7 @@ module.exports = {
         // 一旦404，重定向到index.html
         // 后面由index.html中加载的js代码自己匹配路由处理
         historyApiFallback: true,
-    }
+    },
+    // 去除性能提示，提升打包速度
+    performance: false
 }
