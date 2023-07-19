@@ -1,4 +1,19 @@
 /**
+ * react改动点总结
+ * 1. babel用了react官方插件react-app
+ * 2. extensions自动定义要去补全的扩展名
+ * 3. historyApiFailCallBack：url路由变化刷新404问题
+ * // 升级部分
+ * 4. copy plugin解决网站icon
+ * 5. 缓存
+ * 6. antd
+ * 
+ * 其他配置，如多线程打包、预加载，需要看自己项目适配度，不是全部都适合
+ * 可以多看看别的大神的config配置，精进自己的
+ */
+
+
+/**
  * 合并dev跟pro代码相同的部分，减少重复代码
  */
 
@@ -32,7 +47,7 @@ const getStyleLoaders = (pre) => {
                 }
             }
         },
-        pre 
+        pre
     ].filter(Boolean)
 }
 
@@ -152,7 +167,7 @@ module.exports = {
                     // 权重
                     priority: 30,
                 },
-                 // 剩下部分的 node_modules 单独一个包
+                // 剩下部分的 node_modules 单独一个包
                 libs: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'chunk-libs',
